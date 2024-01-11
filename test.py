@@ -1,13 +1,14 @@
 import json
-import re
 
-f = open("course_codes.json")
-data = json.load(f)
-pat = r'\/([^\/]+)\/?$'
+with open("course_info.json", "r") as f:
+    data = json.load(f)
 
-for i in data:
-    match = re.search(pat, i)
-    if match:
-        print(match.group(1))
 
-f.close()
+
+# Assume data is a list of strings
+# for course in data:
+#     print(course)
+
+# Close the file (though using 'with' automatically closes it when done)
+
+print(data['Yiddish (YIDDISH)']['YIDDISH101'])

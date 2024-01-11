@@ -1,17 +1,18 @@
 module.exports = (sequelize, DataTypes) => {
-  const Courses = sequelize.define("Courses", {
-    code: {
+  const GenericCourses = sequelize.define("GenericCourses", {
+    course_code: {
       type: DataTypes.STRING,
-      allowNull: false,
+      primaryKey: true,
     },
-    courseName: {
+    course_name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-    url: {
+    course_units: {
       type: DataTypes.STRING,
-      allowNull: false,
+    },
+    course_desc: {
+      type: DataTypes.TEXT,
     },
   });
-  return Courses;
+  return GenericCourses;
 };
