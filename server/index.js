@@ -45,26 +45,37 @@ db.sequelize
         }
       );
 
-      // Synchronize the dynamic model with the database
-      await DynamicModel.sync({ force: true });
+      // Check if the table already exists
+      const tableExists = await DynamicModel.sync({ force: false })
+        .then(() => true)
+        .catch(() => false);
 
-      // Iterate through the courses in each department
-      for (const courseCode in courses) {
-        const courseDetails = courses[courseCode];
+      if (!tableExists) {
+        // Synchronize the dynamic model with the database
+        await DynamicModel.sync({ force: true });
 
-        // Insert data into the dynamic model
-        await DynamicModel.create({
-          course_code: courseCode,
-          course_name: courseDetails.course_name,
-          course_units: courseDetails.course_units,
-          course_desc: courseDetails.course_desc,
-        });
+        // Iterate through the courses in each department
+        for (const courseCode in courses) {
+          const courseDetails = courses[courseCode];
+
+          // Insert data into the dynamic model
+          await DynamicModel.create({
+            course_code: courseCode,
+            course_name: courseDetails.course_name,
+            course_units: courseDetails.course_units,
+            course_desc: courseDetails.course_desc,
+          });
+        }
+
+        console.log(
+          `Data for department '${department}' inserted successfully!`
+        );
+      } else {
+        console.log(`Table for department '${department}' already exists!`);
       }
-
-      console.log(`Data for department '${department}' inserted successfully!`);
     }
 
-    console.log("All data inserted successfully!");
+    console.log("All data inserted or checked successfully!");
   })
   .catch((err) => {
     console.error("Error syncing models:", err);

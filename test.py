@@ -11,4 +11,4 @@ with open("course_info.json", "r") as f:
 
 # Close the file (though using 'with' automatically closes it when done)
 
-print(data['Yiddish (YIDDISH)']['YIDDISH101'])
+print(data.keys())
