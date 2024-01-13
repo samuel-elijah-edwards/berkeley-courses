@@ -25,9 +25,20 @@ db.sequelize
     for (const department in data) {
       const courses = data[department];
 
+      // Extract content within the parenthesis for the table name
+      const matches = department.match(/\(([^)]+)\)/);
+      const departmentCode = matches
+        ? matches[1].replace(/\s+/g, "_").toUpperCase()
+        : null;
+
+      if (!departmentCode) {
+        console.error(`Invalid department name format: ${department}`);
+        continue;
+      }
+
       // Define a dynamic model for each department
       const DynamicModel = db.sequelize.define(
-        department.replace(/\s+/g, "_"),
+        departmentCode,
         {
           course_code: {
             type: db.Sequelize.DataTypes.STRING,
@@ -42,37 +53,35 @@ db.sequelize
           course_desc: {
             type: db.Sequelize.DataTypes.TEXT,
           },
+        },
+        {
+          tableName: departmentCode, // Set the table name
         }
       );
 
-      // Check if the table already exists
-      const tableExists = await DynamicModel.sync({ force: false })
-        .then(() => true)
-        .catch(() => false);
+      // Synchronize the dynamic model with the database
+      await DynamicModel.sync({ force: true });
 
-      if (!tableExists) {
-        // Synchronize the dynamic model with the database
-        await DynamicModel.sync({ force: true });
+      // Iterate through the courses in each department
+      for (const courseCode in courses) {
+        const courseDetails = courses[courseCode];
 
-        // Iterate through the courses in each department
-        for (const courseCode in courses) {
-          const courseDetails = courses[courseCode];
-
-          // Insert data into the dynamic model
-          await DynamicModel.create({
-            course_code: courseCode,
-            course_name: courseDetails.course_name,
-            course_units: courseDetails.course_units,
-            course_desc: courseDetails.course_desc,
-          });
-        }
+        // Insert data into the dynamic model
+        await DynamicModel.create({
+          course_code: courseCode,
+          course_name: courseDetails.course_name,
+          course_units: courseDetails.course_units,
+          course_desc: courseDetails.course_desc,
+        });
 
         console.log(
-          `Data for department '${department}' inserted successfully!`
+          `Data inserted for course '${courseCode}' in department '${department}'`
         );
-      } else {
-        console.log(`Table for department '${department}' already exists!`);
       }
+
+      console.log(
+        `All data for department '${department}' inserted successfully!`
+      );
     }
 
     console.log("All data inserted or checked successfully!");
