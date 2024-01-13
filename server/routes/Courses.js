@@ -1,22 +1,27 @@
 const express = require("express");
-const db = require("./models");
-
 const router = express.Router();
+const db = require("../models");
 
-router.get("/:departmentCode/courses", async (req, res) => {
-  const departmentCode = req.params.departmentCode;
+// Define a route for fetching courses in a specific department
+router.get("/:departmentCode", async (req, res) => {
+  const departmentCode = req.params.departmentCode.toUpperCase();
 
   try {
-    const DynamicModel = db.sequelize.model(departmentCode);
+    // Find the dynamic model for the specified department
+    const DynamicModel = db.sequelize.models[departmentCode];
 
-    const courses = await DynamicModel.findAll({
-      attributes: ["course_code", "course_name"],
-    });
+    if (!DynamicModel) {
+      return res.status(404).json({ error: "Department not found" });
+    }
 
-    res.json({ courses });
+    // Query the database for courses in the department
+    const courses = await DynamicModel.findAll();
+
+    // Return the courses in JSON format
+    res.json({ department: departmentCode, courses });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching department courses:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
