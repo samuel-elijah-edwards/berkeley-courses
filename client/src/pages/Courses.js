@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import Layout from "../components/Layout";
 
 function Courses() {
   const courseNames = [
@@ -210,8 +210,7 @@ function Courses() {
   }, {});
 
   return (
-    <div>
-      <Navbar />
+    <Layout>
       <div>
         <h2 className="mx-2 mb-2 text-3xl">List of Courses</h2>
         {Object.keys(coursesByLetter).map((letter) => (
@@ -234,7 +233,7 @@ function Courses() {
           </div>
         ))}
       </div>
-    </div>
+    </Layout>
   );
 }
 

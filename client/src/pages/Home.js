@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 
 function Home() {
   const [listOfPosts, setListOfPosts] = useState([]);
@@ -12,7 +11,6 @@ function Home() {
   }, []);
   return (
     <div>
-      <Navbar />
       <div className="flex flex-col items-center">
         {listOfPosts.map((value, key) => {
           return (
