@@ -197,6 +197,8 @@ function Courses() {
     "Yiddish (YIDDISH)",
   ];
 
+  const regex = /\(([A-Z\s&,]+)\)/;
+
   // Organize course names by their first letter
   const coursesByLetter = courseNames.reduce((acc, courseName) => {
     const firstLetter = courseName[0].toUpperCase();
@@ -218,7 +220,12 @@ function Courses() {
             <ul>
               {coursesByLetter[letter].map((courseName, index) => (
                 <li key={index} className="mx-6 mb-1">
-                  <Link to={`/department/${encodeURIComponent(courseName)}`}>
+                  {/* Use only the department code for the link */}
+                  <Link
+                    to={`/courses/${RegExp(regex)
+                      .exec(courseName)[1]
+                      .replace(" ", "_")}`}
+                  >
                     {courseName}
                   </Link>
                 </li>

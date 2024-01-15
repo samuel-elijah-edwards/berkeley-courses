@@ -23,16 +23,17 @@ db.sequelize
 
     // Read the JSON file
     const data = require("../course_info.json");
+    const regex = /\(([A-Z\s&,]+)\)/;
 
     // Iterate through the outermost keys (departments)
     for (const department in data) {
+      console.log("This is the department: ", department);
       const courses = data[department];
 
       // Extract content within the parenthesis for the table name
-      const matches = department.match(/\(([^)]+)\)/);
-      const departmentCode = matches
-        ? matches[1].replace(/\s+/g, "_").toUpperCase()
-        : null;
+      const matches = RegExp(regex).exec(department);
+      const departmentCode = matches[1].replace(" ", "_");
+      console.log("DEPT CODE: ", departmentCode);
 
       if (!departmentCode) {
         console.error(`Invalid department name format: ${department}`);
