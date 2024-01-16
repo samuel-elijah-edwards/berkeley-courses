@@ -5,6 +5,7 @@ import Departments from "./pages/Departments.js";
 import About from "./pages/About.js";
 import DepartmentPage from "./pages/DepartmentPage.js";
 import CoursePage from "./pages/CoursePage.js";
+import Register from "./pages/Register.js";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             path="/departments/:departmentCode/:course_code"
             element={<CoursePage />}
           />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </Router>
     </div>
