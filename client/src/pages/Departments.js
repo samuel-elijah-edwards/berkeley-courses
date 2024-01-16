@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 
-function Courses() {
-  const courseNames = [
+function Departments() {
+  const departmentNames = [
     "Aerospace Engineering (AERO ENG)",
     "Aerospace Studies (AEROSPC)",
     "African American Studies (AFRICAM)",
@@ -199,33 +199,34 @@ function Courses() {
 
   const regex = /\(([A-Z\s&,]+)\)/;
 
-  // Organize course names by their first letter
-  const coursesByLetter = courseNames.reduce((acc, courseName) => {
-    const firstLetter = courseName[0].toUpperCase();
+  // Organize department names by their first letter
+  const departmentByLetter = departmentNames.reduce((acc, departmentName) => {
+    const firstLetter = departmentName[0].toUpperCase();
     if (!acc[firstLetter]) {
       acc[firstLetter] = [];
     }
-    acc[firstLetter].push(courseName);
+    acc[firstLetter].push(departmentName);
     return acc;
   }, {});
 
   return (
     <Layout>
       <div>
-        <h2 className="mx-2 mb-2 text-3xl">List of Courses</h2>
-        {Object.keys(coursesByLetter).map((letter) => (
+        <h2 className="mx-2 mb-2 text-3xl">List of Departments</h2>
+        {Object.keys(departmentByLetter).map((letter) => (
           <div key={letter}>
             <h3 className="mx-4 mb-2 text-2xl bold">{letter}</h3>
             <ul>
-              {coursesByLetter[letter].map((courseName, index) => (
+              {departmentByLetter[letter].map((departmentName, index) => (
                 <li key={index} className="mx-6 mb-1">
                   {/* Use only the department code for the link */}
                   <Link
-                    to={`/courses/${RegExp(regex)
-                      .exec(courseName)[1]
+                    to={`/departments/${RegExp(regex)
+                      .exec(departmentName)[1]
                       .replace(" ", "_")}`}
+                    className="hover:underline"
                   >
-                    {courseName}
+                    {departmentName}
                   </Link>
                 </li>
               ))}
@@ -237,4 +238,4 @@ function Courses() {
   );
 }
 
-export default Courses;
+export default Departments;

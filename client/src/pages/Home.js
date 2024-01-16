@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Layout from "../components/Layout";
 
 function Home() {
   const [listOfPosts, setListOfPosts] = useState([]);
@@ -10,7 +11,8 @@ function Home() {
     });
   }, []);
   return (
-    <div>
+    <Layout>
+      <h1 className="text-3xl mx-2 mb-2">Home</h1>
       <div className="flex flex-col items-center">
         {listOfPosts.map((value, key) => {
           return (
@@ -28,7 +30,7 @@ function Home() {
           );
         })}
       </div>
-    </div>
+    </Layout>
   );
 }
 

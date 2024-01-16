@@ -5,16 +5,13 @@ import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div>
+    <div className="flex flex-col bg-berkeleyBlue text-yellow-500 min-h-screen">
       <Navbar />
       {/* You can include header, footer, or other common elements here */}
-      <body class="flex flex-col bg-berkeleyBlue text-yellow-500 min-h-screen">
-        <div className="flex-grow">
-          {" "}
-          {/* Change "bg-blue-500" to your desired color class */}
-          {children}
-        </div>
-      </body>
+      <div className="flex-grow">
+        {/* Change "bg-blue-500" to your desired color class */}
+        {children}
+      </div>
       <Footer />
       {/* You can include footer or other common elements here */}
     </div>
