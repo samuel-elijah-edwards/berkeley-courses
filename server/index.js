@@ -14,6 +14,9 @@ app.use("/posts", postRouter);
 const courseRoutes = require("./routes/Courses");
 app.use("/departments", courseRoutes); // Changed the path to /departments
 
+const authRouter = require("./routes/Auth");
+app.use("/auth", authRouter);
+
 db.sequelize
   .sync()
   .then(async () => {

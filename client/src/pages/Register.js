@@ -1,99 +1,121 @@
-import { React, useRef, useState, useEffect } from "react";
-import Layout from "../components/Layout";
+import React, { useState } from "react";
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3-23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8, 24}?/;
+const Register = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [alert, setAlert] = useState("");
 
-function Register() {
-  const userRef = useRef();
-  const errRef = useRef();
+  const handleRegister = () => {
+    // Check email domain
+    if (!email.endsWith("@berkeley.edu")) {
+      setAlert("Email must have a Berkeley domain.");
+      return;
+    }
 
-  const [user, setUser] = useState("");
-  const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
+    // Check password criteria
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,23}$/;
+    if (!passwordRegex.test(password)) {
+      setAlert(
+        "Password must be 8-23 characters, with 1 uppercase, 1 lowercase, and 1 special character."
+      );
+      return;
+    }
 
-  const [pwd, setPwd] = useState("");
-  const [validPwd, setValidPwd] = useState(false);
-  const [pwdFocus, setPwdFocus] = useState(false);
+    // Check password confirmation
+    if (password !== confirmPassword) {
+      setAlert("Passwords do not match.");
+      return;
+    }
 
-  const [matchPwd, setMatchPwd] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
+    // Registration logic (send data to server, etc.)
 
-  const [errMsg, setErrMsg] = useState("");
-  const [sucess, setSuccess] = useState(false);
-
-  useEffect(() => {
-    userRef.current.focus();
-  }, []);
-
-  useEffect(() => {
-    const result = USER_REGEX.test(user);
-    console.log(result);
-    console.log(user);
-    setValidName(result);
-  }, [user]);
-
-  useEffect(() => {
-    const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
-    setValidPwd(result);
-    const match = pwd === matchPwd;
-    setValidMatch(match);
-  }, [pwd, matchPwd]);
-
-  useEffect(() => {
-    setErrMsg(" ");
-  }, [user, pwd, matchPwd]);
+    // Clear form and alerts
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setAlert("Registration successful.");
+  };
 
   return (
-    <Layout>
-      <section>
-        <p
-          ref={errRef}
-          className={errMsg ? "errMsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
-        <h1 className="text-3xl mx-2 mb-2">Register</h1>
-        <form className="m-4 flex flex-col w-1/3 justify-center">
-          <label htmlFor="username">
-            Username:
-            <span className={validName ? "valid" : "hide"}>
-              {/* font awesome faCheck*/}
-            </span>
-            <span className={validName || !user ? "hide" : "invalid"}>
-              {/* font awesome faTimes */}
-            </span>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full p-6 space-y-6 bg-white rounded-md shadow-lg">
+        <h2 className="text-2xl font-semibold text-center">Register</h2>
+
+        {alert && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded"
+            role="alert"
+          >
+            {alert}
+          </div>
+        )}
+
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
           </label>
           <input
-            type="text"
-            id="username"
-            ref={userRef}
-            autoComplete="off"
-            onChange={(e) => setUser(e.target.value)}
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-1 p-2 w-full border rounded-md"
             required
-            aria-invalid={validName ? "opacity-1" : "opacity-0"}
-            aria-describedby="uidnote"
-            onFocus={() => setUserFocus(true)}
-            onBlur={() => setUserFocus(false)}
           />
-          <p
-            id="uidnote"
-            className={
-              userFocus && user && !validName ? "opacity-1" : "opacity-0"
-            }
+        </div>
+
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
           >
-            4 to 24 characters. <br />
-            Must begin with a letter. <br />
-            Letters, numbers, underscores, hyphens allowed.
-          </p>
-        </form>
-      </section>
-    </Layout>
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 p-2 w-full border rounded-md"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="confirmPassword"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="mt-1 p-2 w-full border rounded-md"
+            required
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleRegister}
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+        >
+          Register
+        </button>
+      </div>
+    </div>
   );
-}
+};
 
 export default Register;

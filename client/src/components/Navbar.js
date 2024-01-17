@@ -6,7 +6,7 @@ function Navbar() {
     <div className="bg-metallicGold flex items-center justify-between p-4">
       <div className="flex items-center">
         {/* Logo */}
-        <div className="mr-4">Logo</div>
+        <div className="mr-4">Course Insights</div>
       </div>
 
       {/* Navbar Menu */}
