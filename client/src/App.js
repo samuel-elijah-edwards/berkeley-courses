@@ -6,6 +6,7 @@ import About from "./pages/About.js";
 import DepartmentPage from "./pages/DepartmentPage.js";
 import CoursePage from "./pages/CoursePage.js";
 import Register from "./pages/Register.js";
+import Login from "./pages/Login.js";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             element={<CoursePage />}
           />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </div>

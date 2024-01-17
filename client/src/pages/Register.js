@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -6,7 +7,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [alert, setAlert] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Check email domain
     if (!email.endsWith("@berkeley.edu")) {
       setAlert("Email must have a Berkeley domain.");
@@ -29,13 +30,25 @@ const Register = () => {
       return;
     }
 
-    // Registration logic (send data to server, etc.)
+    try {
+      // Send registration data to the server
+      const response = await axios.post("http://localhost:3001/auth/register", {
+        email,
+        password,
+        confirmPassword,
+      });
 
-    // Clear form and alerts
+      // Handle the server response
+      setAlert(response.data.message);
+    } catch (error) {
+      // Handle errors from the server
+      setAlert(error.response.data.error);
+    }
+
+    // Clear form
     setEmail("");
     setPassword("");
     setConfirmPassword("");
-    setAlert("Registration successful.");
   };
 
   return (
