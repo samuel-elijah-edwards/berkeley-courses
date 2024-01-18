@@ -1,97 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Layout from "../components/Layout";
 import { Link, useParams } from "react-router-dom";
 import UserPost from "../components/UserPost";
 
 function CoursePage() {
   const { course_code, departmentCode } = useParams();
-  console.log(departmentCode);
+  const [ratingsData, setRatingsData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data with Axios
+    axios
+      .get("http://localhost:3001/ratings", {
+        params: {
+          course_code: course_code, // Pass the course code as a parameter
+        },
+      })
+      .then((response) => {
+        // Set the fetched data to state
+        setRatingsData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching ratings data:", error);
+      });
+  }, [course_code]);
 
   return (
     <Layout>
-      <div className="flex">
-        <Link to={`/departments/${departmentCode}`}>
-          <p>Back to</p>
-          <p>{departmentCode} courses</p>
-        </Link>
-        <h1 className="mx-2 mb-2 text-3xl">{course_code}</h1>
-      </div>
-      <div className="p-2 m-4 w-32 flex justify-center text-5xl border rounded-full">
-        6/10
-      </div>
       <section className="grid grid-cols-2">
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes.This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
-        <UserPost
-          postTitle="Awesome Course!"
-          postBody="This was one of my favorite classes."
-          user="Anonymous"
-          userRating="9/10"
-        />
+        {ratingsData.map((rating, index) => (
+          <UserPost
+            key={index}
+            postTitle={rating.postTitle}
+            postBody={rating.postBody}
+            user={rating.user}
+            userRating={rating.rating}
+          />
+        ))}
       </section>
     </Layout>
   );

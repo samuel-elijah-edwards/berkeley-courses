@@ -18,7 +18,7 @@ const authRouter = require("./routes/Auth");
 app.use("/auth", authRouter);
 
 db.sequelize
-  .sync({ force: true })
+  .sync()
   .then(async () => {
     app.listen(3001, () => {
       console.log("Server running on port 3001");
@@ -67,31 +67,49 @@ db.sequelize
       );
 
       // Synchronize the dynamic model with the database
-      await DynamicModel.sync({ force: true });
+      await DynamicModel.sync();
 
       // Iterate through the courses in each department
       for (const courseCode in courses) {
         const courseDetails = courses[courseCode];
 
-        // Insert data into the dynamic model
-        await DynamicModel.create({
-          course_code: courseCode,
-          course_name: courseDetails.course_name,
-          course_units: courseDetails.course_units,
-          course_desc: courseDetails.course_desc,
-        });
-
-        console.log(
-          `Data inserted for course '${courseCode}' in department '${department}'`
+        // Update existing entry or insert if it doesn't exist
+        const [updatedRows] = await DynamicModel.update(
+          {
+            course_name: courseDetails.course_name,
+            course_units: courseDetails.course_units,
+            course_desc: courseDetails.course_desc,
+          },
+          {
+            where: { course_code: courseCode },
+          }
         );
+
+        if (updatedRows > 0) {
+          console.log(
+            `Data updated for course '${courseCode}' in department '${department}'`
+          );
+        } else {
+          // Insert data into the dynamic model
+          await DynamicModel.create({
+            course_code: courseCode,
+            course_name: courseDetails.course_name,
+            course_units: courseDetails.course_units,
+            course_desc: courseDetails.course_desc,
+          });
+
+          console.log(
+            `Data inserted for course '${courseCode}' in department '${department}'`
+          );
+        }
       }
 
       console.log(
-        `All data for department '${department}' inserted successfully!`
+        `All data for department '${department}' inserted or updated successfully!`
       );
     }
 
-    console.log("All data inserted or checked successfully!");
+    console.log("All data inserted or updated successfully!");
   })
   .catch((err) => {
     console.error("Error syncing models:", err);
