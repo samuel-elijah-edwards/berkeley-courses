@@ -7,6 +7,7 @@ import DepartmentPage from "./pages/DepartmentPage.js";
 import CoursePage from "./pages/CoursePage.js";
 import Register from "./pages/Register.js";
 import Login from "./pages/Login.js";
+import Rating from "./pages/Rating.js";
 
 function App() {
   return (
@@ -26,6 +27,10 @@ function App() {
           />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route
+            path="/departments/:departmentCode/:course_code/rating"
+            element={<Rating />}
+          />
         </Routes>
       </Router>
     </div>
