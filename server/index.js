@@ -7,8 +7,8 @@ app.use(express.json());
 app.use(cors());
 
 // Routers
-const postRouter = require("./routes/Posts");
-app.use("/posts", postRouter);
+const courseRatingRoutes = require("./routes/CourseRatings");
+app.use("/ratings", courseRatingRoutes);
 
 // Use the courseRoutes for handling department courses
 const courseRoutes = require("./routes/Courses");
