@@ -25,6 +25,13 @@ function CoursePage() {
       });
   }, [course_code]);
 
+  const handleDelete = (deletedRatingId) => {
+    // Update state to remove the deleted rating
+    setRatingsData((prevData) =>
+      prevData.filter((rating) => rating.id !== deletedRatingId)
+    );
+  };
+
   return (
     <Layout>
       <Link
@@ -36,13 +43,15 @@ function CoursePage() {
 
       <section className="grid grid-cols-2 mx-2">
         {ratingsData.length > 0 ? (
-          ratingsData.map((rating, index) => (
+          ratingsData.map((rating) => (
             <UserPost
-              key={index}
+              key={rating.id}
+              ratingId={rating.id}
               postTitle={rating.postTitle}
               postBody={rating.postBody}
               user={rating.user}
               userRating={rating.rating}
+              onDelete={handleDelete}
             />
           ))
         ) : (

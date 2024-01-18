@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Layout from "../components/Layout";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function Rating() {
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
   const { course_code, departmentCode } = useParams();
   const [formData, setFormData] = useState({
     semester: "",
@@ -20,10 +23,41 @@ function Rating() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to submit the form data
-    console.log("Form data submitted:", formData);
+    if (
+      !formData.semester ||
+      !formData.title ||
+      !formData.rating ||
+      !formData.postBody
+    ) {
+      alert("Please fill out all fields before submitting.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/ratings",
+        {
+          user: formData.anonymous ? "Anon" : "s_edwards",
+          course_code: course_code,
+          postTitle: formData.title,
+          postBody: formData.postBody,
+          rating: formData.rating,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Form data submitted:", formData);
+
+      // Redirect to the new URL after successful submission
+      navigate(`/departments/${departmentCode}/${course_code}`);
+    } catch (error) {
+      console.error("Error submitting form data:", error);
+      // Handle errors if needed
+    }
   };
 
   return (
