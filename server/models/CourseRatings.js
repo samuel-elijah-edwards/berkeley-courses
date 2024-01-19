@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     rating: {
       type: DataTypes.INTEGER,
     },
+    semester: {
+      type: DataTypes.STRING,
+    },
   });
   return CourseRatings;
 };

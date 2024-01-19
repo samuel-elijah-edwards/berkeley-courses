@@ -77,6 +77,7 @@ function Rating() {
           postTitle: formData.title,
           postBody: formData.postBody,
           rating: formData.rating,
+          semester: formData.semester,
         },
         {
           headers: {

@@ -52,6 +52,7 @@ function CoursePage() {
               user={rating.user}
               userRating={rating.rating}
               onDelete={handleDelete}
+              semester={rating.semester}
             />
           ))
         ) : (

@@ -37,7 +37,9 @@ function UserPost(props) {
       <br />
       <span className="grid grid-cols-2 mt-auto text-sm italic">
         <p className="col-start-1">votes</p>
-        <p className="flex justify-end col-start-2">{props.user}</p>
+        <p className="flex justify-end col-start-2">
+          {props.user} ({props.semester})
+        </p>
       </span>
     </div>
   );
