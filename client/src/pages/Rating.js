@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function Rating() {
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
   const { course_code, departmentCode } = useParams();
   const [formData, setFormData] = useState({
     semester: "",
@@ -14,6 +14,40 @@ function Rating() {
     postBody: "",
     anonymous: false,
   });
+  const [terms, setTerms] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/departments/${departmentCode}/${course_code}`)
+      .then((response) => {
+        const course_desc = response.data.course.course_desc;
+
+        const termRegex = /(Spring|Summer|Fall)\s(\d{4})/g;
+        let matches;
+        const extractedTerms = [];
+
+        while ((matches = termRegex.exec(course_desc)) !== null) {
+          const termObject = {
+            term: matches[0],
+            date: new Date(
+              matches[2],
+              matches[1] === "Spring" ? 2 : matches[1] === "Summer" ? 5 : 8,
+              1
+            ),
+          };
+          extractedTerms.push(termObject);
+        }
+
+        // Sort terms array by date in descending order
+        const sortedTerms = extractedTerms.sort((a, b) => b.date - a.date);
+
+        // Remove duplicates and set the unique terms to state
+        setTerms(sortedTerms);
+      })
+      .catch((error) => {
+        console.error("Error fetching course description:", error);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -84,10 +118,11 @@ function Rating() {
               <option value="" disabled selected>
                 Select Semester
               </option>
-              <option value="Spring">Spring</option>
-              <option value="Summer">Summer</option>
-              <option value="Fall">Fall</option>
-              {/* Add more semester options as needed */}
+              {terms.map((term) => (
+                <option key={term.term} value={term.term}>
+                  {term.term}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
