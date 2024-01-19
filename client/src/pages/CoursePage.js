@@ -7,6 +7,7 @@ import UserPost from "../components/UserPost";
 function CoursePage() {
   const { course_code, departmentCode } = useParams();
   const [ratingsData, setRatingsData] = useState([]);
+  const [averageRating, setAverageRating] = useState(null);
 
   useEffect(() => {
     // Fetch data with Axios
@@ -19,6 +20,16 @@ function CoursePage() {
       .then((response) => {
         // Set the fetched data to state
         setRatingsData(response.data);
+
+        // Calculate average rating
+        const totalRatings = response.data.length;
+        const sumRatings = response.data.reduce(
+          (sum, rating) => sum + rating.rating,
+          0
+        );
+        const average =
+          totalRatings > 0 ? (sumRatings / totalRatings) * 2 : null; // Multiply by 2 to make it out of 10
+        setAverageRating(average);
       })
       .catch((error) => {
         console.error("Error fetching ratings data:", error);
@@ -61,6 +72,12 @@ function CoursePage() {
           </div>
         )}
       </section>
+
+      {averageRating !== null && (
+        <div className="mt-4 text-xl text-metallicGold">
+          Average Rating: {(averageRating / 2).toFixed(1)}/10
+        </div>
+      )}
     </Layout>
   );
 }
