@@ -10,7 +10,7 @@ function Rating() {
   const [formData, setFormData] = useState({
     semester: "",
     title: "",
-    rating: 0,
+    rating: "",
     postBody: "",
     anonymous: false,
   });
@@ -51,6 +51,17 @@ function Rating() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "rating") {
+      // Validate that the rating is an integer between 0 and 10
+      const intValue = parseInt(value, 10);
+      if (isNaN(intValue) || intValue < 0 || intValue > 10) {
+        // Display an error or handle invalid input (you can customize this part)
+        alert("Please select a valid rating between 0 and 10.");
+        return;
+      }
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
@@ -116,7 +127,7 @@ function Rating() {
               onChange={handleInputChange}
               className="mt-1 p-2 border rounded-md w-full text-black"
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Select Semester
               </option>
               {terms.map((term) => (
@@ -149,14 +160,22 @@ function Rating() {
             >
               Rating:
             </label>
-            <input
-              type="number"
+            <select
               id="rating"
               name="rating"
               value={formData.rating}
               onChange={handleInputChange}
               className="mt-1 p-2 border rounded-md w-full text-black"
-            />
+            >
+              <option value="" disabled>
+                Select Rating
+              </option>
+              {[...Array(11).keys()].map((rating) => (
+                <option key={rating} value={rating}>
+                  {rating}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label
