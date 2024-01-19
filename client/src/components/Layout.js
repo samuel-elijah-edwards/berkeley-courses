@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
     <div className="flex flex-col bg-berkeleyBlue text-yellow-500 min-h-screen">
       <Navbar />
       {/* You can include header, footer, or other common elements here */}
-      <div className="flex-grow">
+      <div className="flex-grow m-2">
         {/* Change "bg-blue-500" to your desired color class */}
         {children}
       </div>

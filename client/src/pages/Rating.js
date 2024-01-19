@@ -15,6 +15,8 @@ function Rating() {
     anonymous: false,
   });
   const [terms, setTerms] = useState([]);
+  const [charCount, setCharCount] = useState(0);
+  const maxCharLimit = 500;
 
   useEffect(() => {
     axios
@@ -62,10 +64,29 @@ function Rating() {
       }
     }
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    if (name === "postBody") {
+      // Update character count for postBody
+      setCharCount(value.length);
+
+      // Check if character limit is reached
+      if (value.length > maxCharLimit) {
+        // Truncate the input value to the character limit
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value.substring(0, maxCharLimit),
+        }));
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -83,7 +104,7 @@ function Rating() {
       const response = await axios.post(
         "http://localhost:3001/ratings",
         {
-          user: formData.anonymous ? "Anon" : "s_edwards",
+          user: formData.anonymous ? "Anonymous" : "s_edwards",
           course_code: course_code,
           postTitle: formData.title,
           postBody: formData.postBody,
@@ -190,7 +211,11 @@ function Rating() {
               value={formData.postBody}
               onChange={handleInputChange}
               className="mt-1 p-2 border rounded-md w-full text-black"
+              maxLength={maxCharLimit}
             />
+            <div className="text-sm text-right text-metallicGold">
+              {charCount}/{maxCharLimit} characters
+            </div>
           </div>
           <div className="mb-4">
             <label className="flex items-center">

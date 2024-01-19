@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { FaTrash } from "react-icons/fa"; // Import the trash can icon
 
 function UserPost(props) {
   const handleDelete = async () => {
@@ -21,15 +22,17 @@ function UserPost(props) {
 
   return (
     <div className="flex flex-col m-4 p-2 border-2 rounded-md hover:scale-105 transition-transform">
-      <span className="grid grid-cols-3 text-xl">
-        <p className="col-start-1">{props.postTitle}</p>
-        <p className="col-start-2 text-end">{props.userRating}/10</p>
-        <button
-          onClick={handleDelete}
-          className="col-start-3 text-red-500 hover:underline"
-        >
-          Delete
-        </button>
+      <span className="flex justify-between text-xl items-center">
+        <p>{props.postTitle}</p>
+        <div className="flex items-center">
+          <p className="mr-2 text-center">{props.userRating}/10</p>
+          <button
+            onClick={handleDelete}
+            className="text-red-500 hover:underline flex items-center"
+          >
+            <FaTrash /> {/* Render the trash can icon */}
+          </button>
+        </div>
       </span>
       <span>
         <p>{props.postBody}</p>
